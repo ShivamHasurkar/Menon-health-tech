@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "584369203190",
+    "firebase_url": "https://menon-health-tech.firebaseio.com",
+    "project_id": "menon-health-tech",
+    "storage_bucket": "menon-health-tech.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584369203190:android:8719d78bd2fd775b11c9d7",
+        "android_client_info": {
+          "package_name": "com.example.menon_health_tech"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584369203190-hfkt5g8a6ogmkjq373lb2l3eblgv0v5q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.menon_health_tech",
+            "certificate_hash": "2f42ed58a0defb9e974fb393238df085eb9817ce"
+          }
+        },
+        {
+          "client_id": "584369203190-qndggdu7horequkmcp6l3gvhgvofps2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7_CiZLpw2aK9tRLBsBAz8JW4P61kTFFw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584369203190-qndggdu7horequkmcp6l3gvhgvofps2b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
