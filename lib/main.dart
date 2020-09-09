@@ -7,6 +7,7 @@ import 'package:menon_health_tech/screens/DoctorHome/PatientList.dart';
 import 'package:menon_health_tech/screens/PatientHome/PatientHome_Mobile.dart';
 import 'package:menon_health_tech/screens/Tutorial/tutorialCarousel.dart';
 import 'package:menon_health_tech/widgets/Loading.dart';
+import 'package:menon_health_tech/wrapper.dart';
 
 import 'firebase/db.dart';
 
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         textTheme: Theme.of(context).textTheme.apply(fontFamily: 'Open Sans'),
       ),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: Wrapper(),
     );
   }
 }
