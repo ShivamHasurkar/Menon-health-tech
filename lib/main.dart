@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:menon_health_tech/forms/registerForm.dart';
 import 'package:menon_health_tech/screens/Auth_web/AuthWeb.dart';
+import 'package:menon_health_tech/screens/DoctorHome/DoctorHome_Mobile.dart';
 import 'package:menon_health_tech/screens/DoctorHome/PatientList.dart';
 import 'package:menon_health_tech/screens/PatientHome/PatientHome_Mobile.dart';
 import 'package:menon_health_tech/screens/Tutorial/tutorialCarousel.dart';
@@ -91,7 +92,7 @@ class Wrapper extends StatelessWidget {
             if (snapshot.data == null)
               return SplashScreen();
             else if (snapshot.data == "Doctor")
-              return PatientList(phone);
+              return DoctorHome(phone);
             else if (snapshot.data == "Patient")
               return PatientHome(phone);
             else

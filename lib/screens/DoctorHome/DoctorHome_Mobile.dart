@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:menon_health_tech/constants/app_colors.dart';
+import 'package:menon_health_tech/screens/Chat/ChatDoctor.dart';
+import 'package:menon_health_tech/screens/DoctorHome/PatientList.dart';
 import 'package:menon_health_tech/screens/DoctorsList/DoctorsList.dart';
 import 'package:menon_health_tech/screens/EmergencyContact.dart';
 import 'package:menon_health_tech/screens/HealthData/HealthData.dart';
@@ -22,10 +24,8 @@ class _DoctorHomeState extends State<DoctorHome> {
   @override
   Widget build(BuildContext context) {
     fragment = [
-      HealthData(phone),
-      PatientReportTable(phone),
-      DoctordList(phone),
-      EmergencyContact(),
+      PatientList(phone),
+      Chat(phone),
     ];
     return Scaffold(
       appBar: AppBar(
@@ -78,9 +78,9 @@ class NavigationDrawer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 30, top: 25),
             child: ListTile(
-              title: NavBarItem("Data Entry"),
+              title: NavBarItem("Patient List"),
               leading: Icon(
-                Icons.format_align_center,
+                Icons.local_hospital,
                 size: 30,
               ),
               onTap: () => onTap(context, 0),
@@ -89,34 +89,12 @@ class NavigationDrawer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 30, top: 25),
             child: ListTile(
-              title: NavBarItem("Reports"),
+              title: NavBarItem("Chat"),
               leading: Icon(
-                Icons.timeline,
+                Icons.chat,
                 size: 30,
               ),
               onTap: () => onTap(context, 1),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, top: 25),
-            child: ListTile(
-              title: NavBarItem("Doctors Panel"),
-              leading: Icon(
-                Icons.local_hospital_sharp,
-                size: 30,
-              ),
-              onTap: () => onTap(context, 2),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, top: 25),
-            child: ListTile(
-              title: NavBarItem("Emergency Contacts"),
-              leading: Icon(
-                Icons.question_answer,
-                size: 30,
-              ),
-              onTap: () => onTap(context, 3),
             ),
           ),
         ],

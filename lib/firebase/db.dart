@@ -31,7 +31,7 @@ class DB {
 
   Future<bool> createPatient(Patient patient, String pass) async {
     bool rt = false;
-    
+
     Auth().createUser(patient.phone, pass);
     try {
       await _db.collection("Patients").doc(patient.phone).set({
@@ -54,9 +54,9 @@ class DB {
     return rt;
   }
 
-  Future<bool> createDoctor(Doctor doctor) async {
+  Future<bool> createDoctor(Doctor doctor, String pass) async {
     bool rt = false;
-
+    Auth().createUser(doctor.phone, pass);
     try {
       var path =
           _storage.child(doctor.firstName + "-" + doctor.lastName + ".jpg");

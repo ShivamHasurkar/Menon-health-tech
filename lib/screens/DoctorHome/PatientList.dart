@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:menon_health_tech/constants/app_colors.dart';
 import 'package:menon_health_tech/firebase/db.dart';
 import 'package:menon_health_tech/widgets/Loading.dart';
 
@@ -10,12 +11,9 @@ class PatientList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Patients List"),
-      ),
       body: Container(
         padding: EdgeInsets.fromLTRB(10, 25, 10, 0),
-        color: Colors.teal,
+        color: primaryColor,
         child: FutureBuilder(
             future: DB().getPatient(phone),
             builder: (BuildContext context, AsyncSnapshot snapshot) {

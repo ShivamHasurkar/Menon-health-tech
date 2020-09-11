@@ -18,7 +18,7 @@ class RegisterDoctor extends StatefulWidget {
 class _RegisterDoctorState extends State<RegisterDoctor> {
   Doctor d = Doctor();
   String phone;
-  String fName, lName, email, degree, fee;
+  String fName, lName, email, degree, fee, pass, cPass;
   File _image;
   ImagePicker picker = ImagePicker();
 
@@ -191,6 +191,73 @@ class _RegisterDoctorState extends State<RegisterDoctor> {
     );
   }
 
+  Widget _buildPass() {
+    return TextFormField(
+      maxLength: 10,
+      decoration: InputDecoration(
+        hintText: "Password",
+        hintStyle: TextStyle(
+          color: Colors.grey,
+          fontSize: 16.0,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(40.0),
+        ),
+        prefixIcon: Icon(Icons.linear_scale),
+        labelText: ("Password"),
+      ),
+      validator: (String value) {
+        // ignore: unrelated_type_equality_checks
+        if (value.isEmpty) {
+          return 'This is Required';
+        }
+        if (value.length < 6) {
+          return "Too Short";
+        }
+
+        return null;
+      },
+      onSaved: (value) {
+        pass = value;
+      },
+    );
+  }
+
+  Widget _buildCPass() {
+    return TextFormField(
+      maxLength: 10,
+      decoration: InputDecoration(
+        hintText: "Confirm Password",
+        hintStyle: TextStyle(
+          color: Colors.grey,
+          fontSize: 16.0,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(40.0),
+        ),
+        prefixIcon: Icon(Icons.linear_scale),
+        labelText: ("Confirm Password"),
+      ),
+      validator: (String value) {
+        // ignore: unrelated_type_equality_checks
+        if (value.isEmpty) {
+          return 'This is Required';
+        }
+        if (value.length < 6) {
+          return "Too Short";
+        }
+        if (value != pass) {
+          return "Password Mismatch";
+        }
+
+        return null;
+      },
+      onSaved: (value) {
+        cPass = value;
+      },
+    );
+  }
+
   final GlobalKey<FormState> _dFormKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -234,7 +301,7 @@ class _RegisterDoctorState extends State<RegisterDoctor> {
                       d.verified = true;
                       d.phone = phone;
 
-                      var rt = await DB().createDoctor(d);
+                      var rt = await DB().createDoctor(d, pass);
                       if (rt == null) {
                         return Loading();
                       }
