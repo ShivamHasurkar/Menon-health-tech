@@ -186,7 +186,7 @@ class _RegisterDoctorState extends State<RegisterDoctor> {
         return null;
       },
       onSaved: (value) {
-        degree = value;
+        fee = value;
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:menon_health_tech/firebase/auth.dart';
 import 'package:menon_health_tech/firebase/db.dart';
 import 'package:menon_health_tech/modals/Patient.dart';
 import 'package:menon_health_tech/screens/DoctorsList/DoctorsList.dart';
@@ -13,7 +14,7 @@ class RegisterPatient extends StatefulWidget {
 }
 
 class _RegisterPatientState extends State<RegisterPatient> {
-  String phone, gender, covid;
+  String phone, gender, covid, pass, cPass;
   int age;
   DateTime selectedDate;
   _RegisterPatientState(this.phone);
@@ -201,11 +202,7 @@ class _RegisterPatientState extends State<RegisterPatient> {
         labelText: ("Email"),
       ),
       validator: (String value) {
-        // ignore: unrelated_type_equality_checks
-        if (value.isEmpty) {
-          return 'This is Required';
-        }
-
+        // ignore: unrelated_type_equality_check
         return null;
       },
       onSaved: (value) {
@@ -272,6 +269,73 @@ class _RegisterPatientState extends State<RegisterPatient> {
     );
   }
 
+  Widget _buildPass() {
+    return TextFormField(
+      maxLength: 10,
+      decoration: InputDecoration(
+        hintText: "Password",
+        hintStyle: TextStyle(
+          color: Colors.grey,
+          fontSize: 16.0,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(40.0),
+        ),
+        prefixIcon: Icon(Icons.linear_scale),
+        labelText: ("Password"),
+      ),
+      validator: (String value) {
+        // ignore: unrelated_type_equality_checks
+        if (value.isEmpty) {
+          return 'This is Required';
+        }
+        if (value.length < 6) {
+          return "Too Short";
+        }
+
+        return null;
+      },
+      onSaved: (value) {
+        pass = value;
+      },
+    );
+  }
+
+  Widget _buildCPass() {
+    return TextFormField(
+      maxLength: 10,
+      decoration: InputDecoration(
+        hintText: "Confirm Password",
+        hintStyle: TextStyle(
+          color: Colors.grey,
+          fontSize: 16.0,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(40.0),
+        ),
+        prefixIcon: Icon(Icons.linear_scale),
+        labelText: ("Confirm Password"),
+      ),
+      validator: (String value) {
+        // ignore: unrelated_type_equality_checks
+        if (value.isEmpty) {
+          return 'This is Required';
+        }
+        if (value.length < 6) {
+          return "Too Short";
+        }
+        if (value != pass) {
+          return "Password Mismatch";
+        }
+
+        return null;
+      },
+      onSaved: (value) {
+        cPass = value;
+      },
+    );
+  }
+
   final GlobalKey<FormState> _pFormKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -279,51 +343,62 @@ class _RegisterPatientState extends State<RegisterPatient> {
       margin: EdgeInsets.all(24),
       child: Form(
           key: _pFormKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _buildFName(),
-              SizedBox(height: 10),
-              _buildLName(),
-              SizedBox(height: 10),
-              _buildEmail(),
-              SizedBox(height: 10),
-              _buildHeight(),
-              SizedBox(height: 10),
-              _buildWeight(),
-              SizedBox(height: 10),
-              _buildGender(),
-              SizedBox(height: 10),
-              _buildCovid(),
-              SizedBox(height: 10),
-              _buildDOB(),
-              SizedBox(height: 20),
-              RaisedButton(
-                  color: Colors.teal,
-                  padding: EdgeInsets.all(15),
-                  child: Text(
-                    "Register",
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                  onPressed: () async {
-                    if (!_pFormKey.currentState.validate()) return;
-                    p = Patient();
-                    _pFormKey.currentState.save();
-                    p.dob = selectedDate;
-                    p.phone = phone;
-                    p.age = age.toString();
-                    p.gender = gender;
-                    p.covidStatus = covid;
-                    var rt = await DB().createPatient(p);
-                    if (rt == null) {
-                      CircularProgressIndicator();
-                    } else
-                      Navigator.pushReplacement(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => PatientHome(phone)));
-                  }),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _buildFName(),
+                SizedBox(height: 10),
+                _buildLName(),
+                SizedBox(height: 10),
+                _buildEmail(),
+                SizedBox(height: 10),
+                _buildHeight(),
+                SizedBox(height: 10),
+                _buildWeight(),
+                SizedBox(height: 10),
+                _buildGender(),
+                SizedBox(height: 10),
+                _buildCovid(),
+                SizedBox(height: 10),
+                _buildPass(),
+                SizedBox(height: 10),
+                _buildCPass(),
+                SizedBox(height: 10),
+                _buildDOB(),
+                SizedBox(height: 20),
+                RaisedButton(
+                    color: Colors.teal,
+                    padding: EdgeInsets.all(15),
+                    child: Text(
+                      "Register",
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                    onPressed: () async {
+                      if (!_pFormKey.currentState.validate()) return;
+                      p = Patient();
+                      _pFormKey.currentState.save();
+                      p.dob = selectedDate;
+                      p.phone = phone;
+                      p.age = age.toString();
+                      p.gender = gender;
+                      p.covidStatus = covid;
+                      var rt = await DB().createPatient(p, pass);
+                      if (rt == null) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CircularProgressIndicator();
+                          },
+                        );
+                      } else
+                        Navigator.pushReplacement(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => PatientHome(phone)));
+                    }),
+              ],
+            ),
           )),
     );
   }

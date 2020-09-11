@@ -10,6 +10,9 @@ class PatientList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Patients List"),
+      ),
       body: Container(
         padding: EdgeInsets.fromLTRB(10, 25, 10, 0),
         color: Colors.teal,

@@ -20,7 +20,7 @@ class HealthData extends StatelessWidget {
             Expanded(
                 child: ScreenTypeLayout(
               mobile: HealthDataMobile(phone),
-              desktop: HealthDataDesktop(),
+              desktop: HealthDataDesktop(phone),
             ))
 //            ],
         );

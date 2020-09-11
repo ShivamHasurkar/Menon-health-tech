@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:menon_health_tech/modals/Patient.dart';
 import 'package:menon_health_tech/screens/Reports/PatientReportTable.dart';
+import 'package:menon_health_tech/screens/Reports/ReportPatient.dart';
 
 class PatientProfile extends StatelessWidget {
   final Patient p;
@@ -65,7 +66,7 @@ class PatientProfile extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PatientReportTable(p.phone)));
+                          builder: (context) => ReportList(p.phone)));
                 },
                 color: Colors.blue,
                 shape: RoundedRectangleBorder(

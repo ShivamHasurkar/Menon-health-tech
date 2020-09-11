@@ -24,7 +24,7 @@ class _DoctorHomeState extends State<DoctorHome> {
     fragment = [
       HealthData(phone),
       PatientReportTable(phone),
-      DoctordList(),
+      DoctordList(phone),
       EmergencyContact(),
     ];
     return Scaffold(

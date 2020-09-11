@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:menon_health_tech/constants/app_colors.dart';
+import 'package:menon_health_tech/screens/CovidKIT/CovidKIT_Mobile.dart';
 import 'package:menon_health_tech/screens/DoctorsList/DoctorsList.dart';
 import 'package:menon_health_tech/screens/EmergencyContact.dart';
 import 'package:menon_health_tech/screens/HealthData/HealthData.dart';
@@ -24,9 +25,10 @@ class _PatientHomeState extends State<PatientHome> {
   Widget build(BuildContext context) {
     fragment = [
       HealthData(phone),
-      PatientReportTable(phone),
-      DoctordList(),
+      ReportList(phone),
+      DoctordList(phone),
       EmergencyContact(),
+      CovidKITMobile()
     ];
     return Scaffold(
       appBar: AppBar(
@@ -118,6 +120,17 @@ class NavigationDrawer extends StatelessWidget {
                 size: 30,
               ),
               onTap: () => onTap(context, 3),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 30, top: 25),
+            child: ListTile(
+              title: NavBarItem("Buy Covid KIT"),
+              leading: Icon(
+                Icons.question_answer,
+                size: 30,
+              ),
+              onTap: () => onTap(context, 4),
             ),
           ),
         ],

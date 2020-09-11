@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:menon_health_tech/constants/app_colors.dart';
 import 'package:menon_health_tech/firebase/db.dart';
 import 'package:menon_health_tech/modals/Doctor.dart';
+import 'package:menon_health_tech/widgets/Loading.dart';
 
 import 'DoctorProfile.dart';
 
 class DoctordList extends StatefulWidget {
+  String phone;
+  DoctordList(this.phone);
   @override
   _DoctordListState createState() => _DoctordListState();
 }
@@ -17,16 +21,12 @@ class _DoctordListState extends State<DoctordList> {
     return Scaffold(
       body: Container(
         padding: EdgeInsets.fromLTRB(10, 25, 10, 0),
-        color: Colors.teal,
+        color: Colors.white,
         child: FutureBuilder(
             future: DB().getDoctors(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.data == null) {
-                return Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
+                return Loading();
               } else if (snapshot.data.length == 0) {
                 return Container(
                   child: Center(
@@ -34,7 +34,6 @@ class _DoctordListState extends State<DoctordList> {
                   ),
                 );
               } else {
-                print(snapshot.data[0].firstName);
                 return ListView.separated(
                     separatorBuilder: (BuildContext context, int i) {
                       return Divider(
@@ -46,7 +45,7 @@ class _DoctordListState extends State<DoctordList> {
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
                         contentPadding: EdgeInsets.all(10),
-                        tileColor: Colors.white,
+                        tileColor: primaryColor,
                         leading: CircleAvatar(
                             backgroundImage: AssetImage("Images/doctor.png")),
                         title: Text(
@@ -72,8 +71,8 @@ class _DoctordListState extends State<DoctordList> {
                           Navigator.push(
                               context,
                               new MaterialPageRoute(
-                                  builder: (context) =>
-                                      DoctorProfile(snapshot.data[index])));
+                                  builder: (context) => DoctorProfile(
+                                      widget.phone, snapshot.data[index])));
                         },
                       );
                     });

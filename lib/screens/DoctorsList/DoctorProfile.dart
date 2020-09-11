@@ -5,11 +5,13 @@ import 'package:menon_health_tech/modals/Doctor.dart';
 class DoctorProfile extends StatelessWidget {
   @required
   final Doctor d;
-  DoctorProfile(this.d);
+  String phone;
+  DoctorProfile(this.phone, this.d);
   @override
   Widget build(BuildContext context) {
     Color c;
     String t;
+    print(d.consultationFee);
     return Container(
       padding: EdgeInsets.all(20),
       color: Colors.white,
@@ -75,7 +77,7 @@ class DoctorProfile extends StatelessWidget {
             ),
             FlatButton(
                 onPressed: () {
-                  DB().addPatienttoDoctor("8237342691", d.phone);
+                  DB().addPatienttoDoctor(phone, d.phone);
                   showDialog(
                       context: context,
                       builder: (context) {
@@ -87,6 +89,8 @@ class DoctorProfile extends StatelessWidget {
                               child: Text("OK"),
                               onPressed: () {
                                 Navigator.of(context).pop();
+                                Navigator.of(context)
+                                    .popUntil((route) => route.isFirst);
                               },
                             )
                           ],

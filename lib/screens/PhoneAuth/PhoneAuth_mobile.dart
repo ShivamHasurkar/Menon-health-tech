@@ -1,26 +1,48 @@
+import 'dart:html';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_web/firebase_auth_web.dart';
+import 'package:firebase_auth_web/firebase_auth_web_recaptcha_verifier_factory.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:menon_health_tech/constants/app_colors.dart';
 import 'package:menon_health_tech/firebase/db.dart';
 import 'package:menon_health_tech/forms/registerForm.dart';
 import 'package:menon_health_tech/screens/DoctorHome/PatientList.dart';
 import 'package:menon_health_tech/screens/PatientHome/PatientHome_Mobile.dart';
-import 'package:menon_health_tech/screens/PhoneAuth/PhoneAuth_mobile.dart';
 import 'package:menon_health_tech/widgets/CustomAlert.dart';
 import 'package:menon_health_tech/widgets/CustomLoading.dart';
+import 'package:menon_health_tech/widgets/Loading.dart';
 
-class TutorialCarousel extends StatefulWidget {
+class PhoneAuthMobile extends StatefulWidget {
   @override
-  _TutorialCarouselState createState() => _TutorialCarouselState();
+  _PhoneAuthMobileState createState() => _PhoneAuthMobileState();
 }
 
-class _TutorialCarouselState extends State<TutorialCarousel> {
+class _PhoneAuthMobileState extends State<PhoneAuthMobile> {
+  Color btn_color = Colors.blue;
+  Widget btn_child = Text(
+    "Send OTP",
+    style: TextStyle(
+      fontSize: 20,
+      color: Colors.white,
+    ),
+  );
+  Widget btn_pressed = Text(
+    "Send OTP",
+    style: TextStyle(
+      fontSize: 20,
+      color: Colors.white,
+    ),
+  );
   final PageController contr = PageController();
+
   final TextEditingController _mobController = TextEditingController();
+
   final TextEditingController _codeController = TextEditingController();
-  var _firebaseAuth = FirebaseAuth.instance;
+
+  final _firebaseAuth = FirebaseAuth.instance;
 
   Future authenticatePhone(String phone) async {
     phone = "+91" + phone;
@@ -37,13 +59,17 @@ class _TutorialCarouselState extends State<TutorialCarousel> {
             MaterialPageRoute(builder: (context) => PatientHome(phone)));
       } else {
         if (kIsWeb) {
+          document.body.appendHtml("<div id='Container'></div>");
+          var verifier = RecaptchaVerifier(
+              container: "Container", parameters: {'callback': () {}});
+          // print(container);
+          print("cwe");
           try {
-            _firebaseAuth.signInWithPhoneNumber(
-                phone,
-                RecaptchaVerifier(
-                  container: "reCaptcha",
-                ));
+            var _auth = FirebaseAuthWeb.instance;
+            var res = await _auth.signInWithPhoneNumber(
+                phone, RecaptchaVerifierFactoryWeb.instance);
           } catch (e) {
+            print("Catch");
             print(e);
             return e.message;
           }
@@ -78,6 +104,7 @@ class _TutorialCarouselState extends State<TutorialCarousel> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               TextField(
+                                keyboardType: TextInputType.number,
                                 controller: _codeController,
                               ),
                             ],
@@ -134,43 +161,67 @@ class _TutorialCarouselState extends State<TutorialCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    var rt;
     return Scaffold(
-        backgroundColor: primaryColor,
-        body: PageView(
-          scrollDirection: Axis.horizontal,
-          controller: contr,
-          children: [
-            Container(
-              child: Image.asset('Images/img1.png'),
-            ),
-            Container(
-              child: Image.asset('Images/img2.png'),
-            ),
-            Container(
-              child: Image.asset('Images/img3.png'),
-            ),
-            Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(50.0),
-                child: RaisedButton(
-                    padding: EdgeInsets.all(20),
-                    color: Colors.blue,
-                    elevation: 5,
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PhoneAuthMobile()));
-                    },
-                    child: Text(
-                      "Get Started!!!!",
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ))),
-          ],
-        ));
+      backgroundColor: primaryColor,
+      body: Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(50.0),
+          child: Column(
+            children: [
+              Text(
+                "Enter Mobile Number to Continue",
+                style: TextStyle(fontSize: 20, color: Colors.white),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text("You will receive OTP on the below entered Mobile Number"),
+              SizedBox(
+                height: 20,
+              ),
+              TextField(
+                cursorColor: Colors.white,
+                controller: _mobController,
+                keyboardType: TextInputType.number,
+                autofocus: false,
+                maxLength: 10,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 34),
+                smartDashesType: SmartDashesType.enabled,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              RaisedButton(
+                padding: EdgeInsets.all(15),
+                color: btn_color,
+                onPressed: () async {
+                  setState(() {
+                    btn_child = btn_pressed;
+                    btn_color = Colors.grey;
+                  });
+                  String phone = _mobController.text.trim();
+                  if (phone.length != 10) {
+                    ShowAlert("Incorrect", "Please Check entered Mobile Number",
+                        context);
+                    setState(() {
+                      btn_color = Colors.blue;
+                    });
+                  }
+                  var rt = await authenticatePhone(phone);
+                  if (rt == null) {
+                    btn_child = Loading();
+                  }
+                },
+                child: btn_child,
+              )
+            ],
+          )),
+    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:menon_health_tech/firebase/auth.dart';
 import 'package:menon_health_tech/modals/Doctor.dart';
 import 'package:menon_health_tech/modals/HealthDataEntry.dart';
 import 'package:menon_health_tech/modals/Patient.dart';
@@ -28,8 +29,10 @@ class DB {
     return "new";
   }
 
-  Future<bool> createPatient(Patient patient) async {
+  Future<bool> createPatient(Patient patient, String pass) async {
     bool rt = false;
+    
+    Auth().createUser(patient.phone, pass);
     try {
       await _db.collection("Patients").doc(patient.phone).set({
         "firstName": patient.firstName,
@@ -47,6 +50,7 @@ class DB {
     } catch (e) {
       print(e.message);
     }
+
     return rt;
   }
 
@@ -57,7 +61,10 @@ class DB {
       var path =
           _storage.child(doctor.firstName + "-" + doctor.lastName + ".jpg");
       path.putFile(doctor.document);
-    } catch (e) {}
+    } catch (e) {
+      print("Cannot Upload Document");
+      print(e);
+    }
 
     try {
       await _db.collection("Doctor").doc(doctor.phone).set({
@@ -122,7 +129,6 @@ class DB {
         print(d);
         HealthDataEntry h = HealthDataEntry();
         h.cold = d["Cold"];
-        print(h.cold);
         h.cough = d["Cough"];
         h.temprature = d["Temprature"];
         h.lossofSmell = d["Loss of Smell"];
@@ -131,20 +137,19 @@ class DB {
         // h.coughSevarity = d["Cough Severity"];
         h.pulse = d["Pulse"];
         h.other = d["Other"];
-        h.cold = d["cold"];
-        h.dataTime = d["Date"];
+        h.oxy = d["Oxygen Level"];
+        //h.dataTime = d["Date"];
         h.date = d["Date"].toString();
 
         hs.add(h);
-        print(hs);
+        print(" inside DB ");
       });
 
       return hs;
     } catch (e) {
-      print(e.message);
+      print(e);
     }
     print("returning health records");
-    return hs;
   }
 
   Future<List<Doctor>> getDoctors() async {
@@ -168,6 +173,7 @@ class DB {
         doctors.add(da);
         print(d["verifed"]);
       });
+      return doctors;
     } catch (e) {
       print(e.message);
     }
